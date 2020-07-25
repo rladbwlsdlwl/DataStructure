@@ -13,16 +13,21 @@ typedef struct Node{
 	struct Node*link;
 }Node;
 
+Node* insert_sort(Node*head,char item[MAX]); //오름차순 연결
 Node* insert_last(Node*head,char item[MAX]); //맨 뒤에 연결
 Node* insert_first(Node*head,char item[MAX]);//맨 앞에 연결
 Node* insert(Node*head,Node*pre,char item[MAX]);//pre노드 뒤에 연결
+Node* search(Node*head,char find[MAX]);
+Node* delete(Node*head,char find[MAX]);
 
 int main (void){
+
 	int n; bool answer=true;
+	char find[MAX];
 	Node*head=NULL;
 
 	while(answer){
-		printf("1.끝에 연결  2.첨에 연결  0.종료\n==>");
+		printf("1.끝에 연결  2.첨에 연결 3.오름차순연결  0.종료\n==>");
 		scanf("%d",&n);
 
 		switch(n){
@@ -43,10 +48,19 @@ int main (void){
 				head=insert_first(head,"is");
 				head=insert_first(head,"yujin");
 				break;
-			
+			case 3:
+				head=NULL;
+				head=insert_sort(head,"hello");
+				head=insert_sort(head,"my");
+				head=insert_sort(head,"name");
+				head=insert_sort(head,"is");
+				head=insert_sort(head,"yujin");
+				break;
 			case 0:
 				answer=false;
-				break;	
+				break;
+			default:
+				return 0;	
 		}
 
 		for(Node*curr=head; curr; curr=curr->link)
@@ -55,9 +69,57 @@ int main (void){
 	}
 
 	answer=true;
-	delete_first(
+
+	scanf("%s",find);
+	
+	if(search(head,find))
+		printf("%s 노드를 찾았습니다!\n", search(head,find)->data.string);
+	else
+		printf("노드를 찾지 못했습니다\n");
+
+	head=delete(head,find);
+
+	if(search(head,find))
+		printf("%s 노드를 찾았습니다!\n", search(head,find)->data.string);
+	else
+		printf("노드를 찾지 못했습니다\n");
 
 	return 0;
+}
+
+Node* insert_sort(Node*head,char item[MAX]){
+	Node*newNode=malloc(sizeof(Node));
+	strcpy(newNode->data.string,item);
+
+	if(head==NULL)
+		head=newNode;
+	else{
+		if(strcmp(head->data.string,newNode->data.string)==1){ //노드 맨앞에 연결
+			newNode->link=head;
+			head=newNode;
+		}
+		else{
+			if(head->link==NULL){ //노드 한개 && 맨뒤에 연결
+				head->link=newNode;
+				newNode->link=NULL;
+				return head;
+			}
+			else{//노드 두갸이상일때
+				Node*curr=head;
+				while(curr->link){ 
+					if(strcmp(curr->link->data.string,newNode->data.string)>0){
+						newNode->link=curr->link;
+						curr->link=newNode;
+						return head; //오름차순 삽입 
+					}
+					curr=curr->link;
+				}
+				curr->link=newNode; //노드 맨뒤에 삽입 
+				newNode->link=NULL;
+			}
+		}
+	}
+	return head;
 }
 
 Node* insert_last(Node*head,char item[MAX]){
@@ -95,8 +157,42 @@ Node* insert(Node*head,Node*pre,char item[MAX]){
 	return head;
 }
 
+Node* delete(Node*head,char find[MAX]){
+	if(head==NULL)
+		printf("삭제오류!\n");
+	else{
+		if(!strcmp(head->data.string,find)){
+			Node*temp=head;
+			head=head->link;
+			free(temp);
+			printf("삭제완료!\n");
+		}
+		else{
+			Node*curr=head;
+			while(curr->link){
+				if(!strcmp(curr->link->data.string,find)){
+					Node*temp=curr->link;
+					curr->link=temp->link;
+					free(temp);
+					printf("삭제완료!\n");
+					return head;
+				}
+				curr=curr->link;
+			}
+			printf("삭제오류! 존재하지않는 노드!\n");
+		}
+	}
+	return head;
+}
 
-
+Node* search(Node*head,char find[MAX]){
+	if(!head)
+		return NULL;
+	if(!strcmp(head->data.string,find))
+		return head;
+	else 
+		return search(head->link,find);
+}
 
 
 
