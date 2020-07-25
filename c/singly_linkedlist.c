@@ -19,7 +19,7 @@ Node* insert_first(Node*head,char item[MAX]);//맨 앞에 연결
 Node* insert(Node*head,Node*pre,char item[MAX]);//pre노드 뒤에 연결
 Node* search(Node*head,char find[MAX]);
 Node* delete(Node*head,char find[MAX]);
-
+void print_reverse(Node*head);
 int main (void){
 
 	int n; bool answer=true;
@@ -66,6 +66,7 @@ int main (void){
 		for(Node*curr=head; curr; curr=curr->link)
 			printf("%s ",curr->data.string);
 		printf("\n");
+		print_reverse(head); printf("\n");
 	}
 
 	answer=true;
@@ -120,6 +121,15 @@ Node* insert_sort(Node*head,char item[MAX]){
 		}
 	}
 	return head;
+}
+
+void print_reverse(Node*head){
+	if(head==NULL)
+		printf("NULL->");
+	else{
+		print_reverse(head->link);
+		printf("%s->",head->data.string);
+	}
 }
 
 Node* insert_last(Node*head,char item[MAX]){
