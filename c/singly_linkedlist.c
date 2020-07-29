@@ -100,26 +100,19 @@ Node* insert_sort(Node*head,char item[MAX]){
 			head=newNode;
 		}
 		else{
-			if(head->link==NULL){ //노드 한개 && 맨뒤에 연결
-				head->link=newNode;
-				newNode->link=NULL;
-				return head;
-			}
-			else{//노드 두갸이상일때
-				Node*curr=head;
-				while(curr->link){ 
-					if(strcmp(curr->link->data.string,newNode->data.string)>0){
-						newNode->link=curr->link;
-						curr->link=newNode;
-						return head; //오름차순 삽입 
-					}
-					curr=curr->link;
+			Node*curr=head;
+			while(curr->link){ 
+				if(strcmp(curr->link->data.string,newNode->data.string)>0){
+					newNode->link=curr->link;
+					curr->link=newNode;
+					return head; //오름차순 삽입 
 				}
-				curr->link=newNode; //노드 맨뒤에 삽입 
-				newNode->link=NULL;
+				curr=curr->link;
 			}
+			curr->link=newNode; //노드 맨뒤에 삽입 
+			newNode->link=NULL;
 		}
-	}
+	}	
 	return head;
 }
 
