@@ -20,6 +20,10 @@ Node* insert(Node*head,Node*pre,char item[MAX]);//pre노드 뒤에 연결
 Node* search(Node*head,char find[MAX]);
 Node* delete(Node*head,char find[MAX]);
 void print_reverse(Node*head);
+void print_list(Node*head);
+Node* concat_list(Node*head1,Node*head2);
+Node* reverse(Node*head);
+
 int main (void){
 
 	int n; bool answer=true;
@@ -62,10 +66,8 @@ int main (void){
 			default:
 				return 0;	
 		}
-
-		for(Node*curr=head; curr; curr=curr->link)
-			printf("%s ",curr->data.string);
-		printf("\n");
+		
+		print_list(head);
 		print_reverse(head); printf("\n");
 	}
 
@@ -84,6 +86,18 @@ int main (void){
 		printf("%s 노드를 찾았습니다!\n", search(head,find)->data.string);
 	else
 		printf("노드를 찾지 못했습니다\n");
+	
+	Node*head2=NULL;
+	head2=insert_first(head2,"hello");
+	head2=insert(head2,head2,"world");
+
+	print_list(head2);
+
+	Node*new=concat_list(head,head2);
+	print_list(new);
+		
+	new=reverse(new);
+	print_list(new);
 
 	return 0;
 }
@@ -116,12 +130,36 @@ Node* insert_sort(Node*head,char item[MAX]){
 	return head;
 }
 
+Node* concat_list(Node*head1,Node*head2){
+	if(!head1)
+		return head2;
+	else if(!head2)
+		return head1;
+	else{
+		Node*curr=head1;
+		while(curr->link)
+			curr=curr->link;
+		curr->link=head2;
+	}
+
+	return head1;
+}
+
 void print_reverse(Node*head){
 	if(head==NULL)
 		printf("NULL->");
 	else{
 		print_reverse(head->link);
 		printf("%s->",head->data.string);
+	}
+}
+
+void print_list(Node*head){
+	if(!head)
+		printf("NULL\n\n");
+	else{
+		printf("%s -> ",head->data.string);
+		print_list(head->link);
 	}
 }
 
@@ -197,5 +235,18 @@ Node* search(Node*head,char find[MAX]){
 		return search(head->link,find);
 }
 
+Node* reverse(Node*head){
+	Node*p, *q, *r;
+	p=head;
+	q=NULL;
+	while(p!=NULL){
+		r=q;
+		q=p;
+		p=p->link;
 
+		q->link=r;
+	}
+	
+	return q;
+}
 
