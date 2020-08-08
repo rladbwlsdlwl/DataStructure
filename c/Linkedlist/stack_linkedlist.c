@@ -24,14 +24,9 @@ void push(LinkedStackType*s,element item){
 	Node*newNode=malloc(sizeof(Node));
 	newNode->data=item;
 
-	if(s->top==NULL){
-		newNode->link=NULL;
-		s->top=newNode;
-	}
-	else{
-		newNode->link=s->top;
-		s->top=newNode;
-	}
+	newNode->link=s->top;
+	s->top=newNode;
+	
 }
 element pop(LinkedStackType*s){
 	if(is_empty(s)){
@@ -50,21 +45,27 @@ element peek(LinkedStackType*s){
 	return s->top->data;
 }
 
-void print_stack(LinkedStackType p);
+void print_stack(LinkedStackType *p);
 
 int main(void){
 	LinkedStackType s; init(&s);
 
 	for(int i=0;i<10;i++)
 		push(&s,i+1);
-	print_stack(s);
-	//printf("pop %d\n",pop(&s));
-
+	print_stack(&s);
+	
+	while(!is_empty(&s))
+		printf("pop %d\n",pop(&s));
 
 	return 0;
 }
 
-void print_stack(LinkedStackType p){
-	while(!is_empty(&p))
-		printf("pop %d\n",pop(&p));
+void print_stack(LinkedStackType* p){
+	Node*curr=p->top;
+	while(curr){
+		printf("[%d]->",curr->data);
+		curr=curr->link;
+	}
+	printf("\n");
 }
+
