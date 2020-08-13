@@ -50,6 +50,7 @@ void preorder(StackNode*s,Node*root);
 void inorder(StackNode*s,Node*root);
 void postorder(StackNode*s,Node*root);
 void show_stack(StackNode*s);
+void inorder_iter(StackNode*s,Node*root); //중위순회출력 스택이용 
 
 int main (void){
 	StackNode *s=malloc(sizeof(StackNode)); init(s);
@@ -120,3 +121,15 @@ void show_stack(StackNode*s){
 	printf("스택이 비었습니다 !\n\n");
 }
 
+void inorder_iter(StackNode*s,Node*root){
+	while(1){
+		for(; root; root=root->left)
+			push(s,root);
+		
+		root=pop(s);
+		if(!root) break;
+
+		printf("inorder_stack: %d\n",root->data);
+		root=root->right;
+	}
+}
