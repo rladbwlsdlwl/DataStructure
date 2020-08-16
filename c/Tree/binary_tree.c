@@ -46,11 +46,11 @@ Node n1={1,&n2,&n3};
 Node*root=&n1;
 
 bool menu(StackNode*s);
-void preorder(StackNode*s,Node*root);
-void inorder(StackNode*s,Node*root);
-void postorder(StackNode*s,Node*root);
-void show_stack(StackNode*s);
-void inorder_iter(StackNode*s,Node*root); //중위순회출력 스택이용 
+void preorder(Node*root);
+void inorder(Node*root);
+void postorder(Node*root);
+void preorder_iter(StackNode*s);//전위순회 출력 스택이용 
+void inorder_iter(StackNode*s); //중위순회출력 스택이용 
 
 int main (void){
 	StackNode *s=malloc(sizeof(StackNode)); init(s);
@@ -69,16 +69,16 @@ bool menu(StackNode*s){
 		scanf("%d",&ans);
 		switch(ans){
 			case 1:
-				preorder(s,root);
-				show_stack(s);
+				preorder(root);
+				preorder_iter(s);
 				break;
 			case 2:
-				inorder(s,root);
-				show_stack(s);
+				inorder(root);
+				inorder_iter(s);
 				break;
 			case 3:
-				postorder(s,root);
-				show_stack(s);
+				postorder(root);
+				//postorder_iter(s);
 				break;
 			case 0:
 				return true;
@@ -88,48 +88,55 @@ bool menu(StackNode*s){
 	}
 }
 
-void preorder(StackNode*s,Node*root){
+void preorder(Node*root){
 	if(root!=NULL){
-		push(s,root);
 		printf("preorder: %d\n",root->data);
-		preorder(s,root->left);
-		preorder(s,root->right);
+		preorder(root->left);
+		preorder(root->right);
 	}
 }
 
-void inorder(StackNode*s,Node*root){
+void inorder(Node*root){
 	if(root!=NULL){
-		inorder(s,root->left);
-		push(s,root);
+		inorder(root->left);
 		printf("inorder: %d\n",root->data);
-		inorder(s,root->right);
+		inorder(root->right);
 	}
 }
 
-void postorder(StackNode*s,Node*root){
+void postorder(Node*root){
 	if(root!=NULL){
-		postorder(s,root->left);
-		postorder(s,root->right);
-		push(s,root);
+		postorder(root->left);
+		postorder(root->right);
 		printf("postorder: %d\n",root->data);
 	}
 }
-void show_stack(StackNode*s){
-	printf("스택에 넣은 노드를 pop!\n");
-	while(s->top>=0)
-		printf("pop %d\n",pop(s)->data);
-	printf("스택이 비었습니다 !\n\n");
-}
 
-void inorder_iter(StackNode*s,Node*root){
+void preorder_iter(StackNode*s){
+	Node*curr=root;
 	while(1){
-		for(; root; root=root->left)
-			push(s,root);
-		
-		root=pop(s);
-		if(!root) break;
+		for(; curr; curr=curr->left){
+			push(s,curr);
+			printf("preorder_stack: %d\n",curr->data);
+		}
+		curr=pop(s);
+		if(!curr) break;
 
-		printf("inorder_stack: %d\n",root->data);
-		root=root->right;
+		curr=curr->right;
 	}
 }
+
+void inorder_iter(StackNode*s){
+	Node*curr=root;
+	while(1){
+		for(; curr; curr=curr->left)
+			push(s,curr);
+		
+		curr=pop(s);
+		if(!curr) break;
+
+		printf("inorder_stack: %d\n",curr->data);
+		curr=curr->right;
+	}
+}
+
