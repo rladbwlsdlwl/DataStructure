@@ -80,6 +80,20 @@ Node n3={3,&n6,NULL};
 Node n2={2,&n4,&n5};
 Node n1={1,&n2,&n3};
 Node*root=&n1;
+/*균형이진트리 생성 (높이 차 최대1)
+                 5
+	    2      7
+	 1    4       8
+	     3
+*/
+Node b7={3,NULL,NULL};
+Node b6={1,NULL,NULL};
+Node b5={4,&b7,NULL};
+Node b4={8,NULL,NULL};
+Node b3={2,&b6,&b5};
+Node b2={7,NULL,&b4};
+Node b1={5,&b3,&b2};
+Node *root1=&b1;
 
 bool menu(StackNode*s);
 void preorder(Node*root);
@@ -95,7 +109,9 @@ int get_leaf_count(Node*root); //트리의 단말노드 개수
 void level_order(Node*root); //큐를 이용한 레벨순회 
 int get_node_sum(Node*root); //후위순회로 노드의 총 합
 int get_node_max(Node*root); //후위순회로 가장 큰 노드 찾기 
-
+bool balanced_tree(Node*root1); //균헝트리 판별 
+int get_level_node_count(Node*root,int cmp); //X레벨의 노드개수
+void symmetry(Node*root); //트리 좌우대칭
 
 int main (void){
 	StackNode *s=malloc(sizeof(StackNode)); init_stack(s);
@@ -113,12 +129,22 @@ int main (void){
 
 	printf("노드의 총 합: %d\n",get_node_sum(root));
 	printf("노드의 최댓값: %d\n",get_node_max(root));
-	/*
-	if(balanced_tree(root))
+
+	
+	if(balanced_tree(root1))
 		printf("균형트리입니다!\n");
 	else
 		printf("균형트리가 아닙니다!\n");
-	*/
+	
+	int n; 
+	printf("찾고자 하는 레벨을 입력:"); scanf("%d",&n);
+	printf("%d 레벨의 노드 개수는 %d\n",n,get_level_node_count(root1,n));
+
+	printf("트리를 좌우대칭하기\n");
+	preorder(root); 
+	symmetry(root);
+	preorder(root);
+
 	return 0;
 }
 
@@ -217,6 +243,43 @@ void level_order(Node*root){
 
 	free(q);
 	printf("\n");
+}
+
+bool balanced_tree(Node*root){
+	if(!root)
+		return true;
+	else{
+		int left=get_height(root->left);
+		int right=get_height(root->right);
+
+		if(left-right<=1 && left-right>=-1 && balanced_tree(root->left) && balanced_tree(root->right))
+				return true;
+	}
+
+	return false;
+}
+
+int get_level_node_count(Node*root,int cmp){
+	if(!root)
+		return 0;
+	else{
+		if(cmp!=1)
+			return get_level_node_count(root->left,cmp-1)+get_level_node_count(root->right,cmp-1);
+		else
+			return 1;
+	}
+}
+
+void symmetry(Node*root){
+	if(root){
+		symmetry(root->left);
+		symmetry(root->right);
+
+
+		Node*temp=root->left;
+		root->left=root->right;
+		root->right=temp;
+	}
 }
 
 int get_node_count(Node*root){
