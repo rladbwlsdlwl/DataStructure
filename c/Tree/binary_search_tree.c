@@ -10,9 +10,11 @@ typedef struct node{
 	struct node*right;
 }Node;
 
-Node* insert_node(Node*root,element item);
-Node* newNode(element item);
-void inorder(Node*root);
+Node* insert_node(Node*root,element item); //노드 삽입
+Node* newNode(element item); // 새로운 노드 생성
+void inorder(Node*root); // 중위순회 
+Node* search_node(Node*node,element item); //재귀로 탐색
+Node* search(Node*node,element item); // 반복문 탐색
 
 int main (void){
 	Node*root=NULL;
@@ -27,13 +29,13 @@ int main (void){
 	inorder(root);
 	printf("\n이진탐색트리를 탐색합니다\n");
 
-	result=search(root,10);
+	result=search(root,20);
 	if(result)
 		printf("%d 를 찾았습니다!\n",result->data);
 	else
 		printf("NULL!\n");
 
-	result=search(root,60);
+	result=search(root,40);
 	if(result)
 		printf("%d 를 찾았습니다!\n",result->data);
 	else
@@ -63,8 +65,40 @@ Node* newNode(element item){
 	return temp;
 }
 
-Node* search(Node*root,element item){
+Node* search_node(Node*node,element item){
+	if(!node)
+		return NULL;
+	else if(node->data>item)
+		return search_node(node->left,item);
+	else if(node->data<item)
+		return search_node(node->right,item);
+	else
+		return node;
 
+}
+
+Node* search(Node*node,element item){
+	while(node){
+		if(node->data>item)
+			node=node->left;
+		else if(node->data<item)
+			node=node->right;
+		else 
+			return node;
+	}
+	
+	/*
+	for(;node;(node->data>item)? node->left : node->right){
+		if(node->data==item)
+			return node;
+	}
+	*/
+
+	return NULL;
+}
+
+Node* delete_node(Node*root,element item){
+	
 void inorder(Node*root){
 	if(root){
 		inorder(root->left);
