@@ -15,6 +15,8 @@ Node* newNode(element item); // 새로운 노드 생성
 void inorder(Node*root); // 중위순회 
 Node* search_node(Node*node,element item); //재귀로 탐색
 Node* search(Node*node,element item); // 반복문 탐색
+Node* delete_node(Node*root,element item); //노드삭제
+Node* min_value_node(Node*node); //노드의 작은 값
 
 int main (void){
 	Node*root=NULL;
@@ -40,7 +42,12 @@ int main (void){
 		printf("%d 를 찾았습니다!\n",result->data);
 	else
 		printf("NULL!\n");
+	
+	root=insert_node(root,5); root=insert_node(root,15); root=insert_node(root,13); root=insert_node(root,14);
 
+	root=delete_node(root,10);
+	printf("10 노드 삭제 후 중위순회\n");
+	inorder(root);
 
 	return 0;
 }
@@ -98,7 +105,44 @@ Node* search(Node*node,element item){
 }
 
 Node* delete_node(Node*root,element item){
+	if(!root)
+		return root;
 	
+	if(root->data<item)
+		root->right=delete_node(root->right,item);
+	else if(root->data>item)
+		root->left=delete_node(root->left,item);
+	else{
+		if(!root->left){
+			Node*temp=root->right;
+			free(root);
+
+			return temp;
+		}
+		else if(!root->right){
+			Node*temp=root->left;
+			free(root);
+
+			return temp;
+		}
+		else{
+			Node*temp=min_value_node(root->right);
+			root->data=temp->data;
+
+			root->right=delete_node(root->right,temp->data);
+		}
+
+	}
+
+	return root;
+}
+
+Node* min_value_node(Node*node){
+	while(node->left)
+		node=node->left;
+	return node;
+}
+
 void inorder(Node*root){
 	if(root){
 		inorder(root->left);
